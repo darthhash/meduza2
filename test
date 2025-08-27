@@ -1,0 +1,21 @@
+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
+
+export OPENAI_API_KEY="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"; export ADMIN_TOKEN="\66f26fdf81ff0b6e45d14d9646df2eecab5168494f06e4ce963a055628736932"
+python scripts/generate_news.py
+python app.py
+
+
+
+
+export LLM_PROVIDER="hf"; export HF_TOKEN="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"; export HF_MODEL="zephyr-7b-beta"
+python scripts/generate_news.py
+
+curl -X POST "https://meduza-production-9648.up.railway.app/newsgen/run" \
+  -H "Content-Type: application/json" \
+  -H "X-Token: <NEWSGEN_TOKEN>" \
+  -d '{"topic":"Москва — финтех — экспериментальный режим — вымышленный предприниматель","n":1,"import":true}'
+
+  curl -X POST " http://0.0.0.0:8081/newsgen/run" \
+  -H "Content-Type: application/json" \
+  -H "X-Token: <NEWSGEN_TOKEN>" \
+  -d '{"topic":"Москва — финтех — экспериментальный режим — вымышленный предприниматель","n":1,"import":true}'
