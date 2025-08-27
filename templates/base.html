@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Медуза — хорошие новости</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">meduza</div>
+
+      <nav class="site-nav" aria-label="Главное меню">
+        <a href="#" class="nav-link">НОВОСТИ</a>
+        <a href="#" class="nav-link">ИСТОРИИ</a>
+        <a href="#" class="nav-link">РАЗБОР</a>
+        <a href="#" class="nav-link">ПОДКАСТЫ</a>
+      </nav>
+
+      <a class="support-btn" href="#">ПОДДЕРЖАТЬ «МЕДУЗУ»</a>
+    </div>
+  </header>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>Сатира / демо — макет «под Медузу». Все события вымышленные.</small>
+    </div>
+  </footer>
+</body>
+</html>

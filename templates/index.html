@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article class="hero">
+  <div class="hero-left">
+    <div class="kicker">РАЗБОР</div>
+    {% if news.main %}
+      <h1 class="hero-title">
+        <a class="link-reset" href="{{ url_for('article', slug=news.main.slug) }}">{{ news.main.title }}</a>
+      </h1>
+      <p class="hero-dek">{{ news.main.teaser }}</p>
+    {% endif %}
+  </div>
+
+  <div class="hero-right">
+    {% for item in news.side %}
+      <div class="side-card">
+        <h3 class="side-title">
+          <a class="link-reset" href="{{ url_for('article', slug=item.slug) }}">{{ item.title }}</a>
+        </h3>
+        <p class="side-dek">{{ item.teaser }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</article>
+
+<section class="list-grid">
+  {% for item in news.list %}
+    <article class="list-item">
+      <h4 class="list-title">
+        <a class="link-reset" href="{{ url_for('article', slug=item.slug) }}">{{ item.title }}</a>
+      </h4>
+      <p class="list-dek">{{ item.teaser }}</p>
+    </article>
+  {% endfor %}
+</section>
+{% endblock %}

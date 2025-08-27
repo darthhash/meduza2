@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ 'Редактировать' if article else 'Новая статья' }}</h1>
+<form method="post">
+  <p><label>Title<br><input name="title" value="{{ article.title if article else '' }}" style="width: 100%"></label></p>
+  <p><label>Slug<br><input name="slug" value="{{ article.slug if article else '' }}" style="width: 100%"></label></p>
+  <p><label>Section<br>
+    <select name="section">
+      {% set cur = article.section if article else 'list' %}
+      <option value="main" {{ 'selected' if cur=='main' else '' }}>main</option>
+      <option value="side" {{ 'selected' if cur=='side' else '' }}>side</option>
+      <option value="list" {{ 'selected' if cur=='list' else '' }}>list</option>
+    </select>
+  </label></p>
+  <p><label>Tags (через запятую)<br>
+     <input name="tags" value="{{ article.tags if article else '' }}" style="width: 100%">
+  </label></p>
+  <p><label>Text / HTML<br><textarea name="text" rows="18" style="width: 100%">{{ article.text if article else '' }}</textarea></label></p>
+  <p>
+    <button type="submit">Сохранить</button>
+    <a href="{{ url_for('admin') }}">Отмена</a>
+  </p>
+</form>
+{% endblock %}

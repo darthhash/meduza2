@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Админка</h1>
+<p><a href="{{ url_for('admin_new') }}">+ Новая статья</a></p>
+<table border="1" cellpadding="6" cellspacing="0">
+  <tr>
+    <th>ID</th><th>Title</th><th>Slug</th><th>Section</th><th>Tags</th><th></th>
+  </tr>
+  {% for a in items %}
+  <tr>
+    <td>{{ a.id }}</td>
+    <td>{{ a.title }}</td>
+    <td>{{ a.slug }}</td>
+    <td>{{ a.section }}</td>
+    <td>{{ a.tags }}</td>
+    <td>
+      <a href="{{ url_for('admin_edit', aid=a.id) }}">edit</a>
+      <form method="post" action="{{ url_for('admin_delete', aid=a.id) }}" style="display:inline" onsubmit="return confirm('Удалить?')">
+        <button type="submit">delete</button>
+      </form>
+      <a href="{{ url_for('article', slug=a.slug) }}" target="_blank">open</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

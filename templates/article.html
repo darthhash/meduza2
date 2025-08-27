@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='articles.css') }}">
+
+<article class="page">
+  <header class="page-head">
+    <div class="kicker">{{ article.section|upper }}</div>
+    <h1 class="title">{{ article.title }}</h1>
+    <div class="meta">Опубликовано: {{ article.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+  </header>
+
+  <div class="prose">
+    {{ article_html | safe }}
+  </div>
+
+  <footer class="page-foot">
+    <a class="link-reset back" href="{{ url_for('index') }}">← На главную</a>
+  </footer>
+</article>
+{% endblock %}

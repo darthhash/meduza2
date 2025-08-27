@@ -1,0 +1,84 @@
+ /* контейнер страницы */
+.page {
+  max-width: 760px;
+  margin: 26px auto 60px;
+  padding: 0 16px;
+  background: #fff;
+}
+
+/* хедер */
+.page-head .kicker {
+  color: #a38d6d;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+.page-head .title {
+  font-family: "PT Serif", Georgia, serif;
+  font-size: 34px;
+  line-height: 1.2;
+  margin: 6px 0 6px;
+}
+.page-head .meta {
+  color: #666;
+  font-size: 14px;
+}
+
+/* основная типографика */
+.prose {
+  color: #111;
+  font-size: 18px;
+  line-height: 1.7;
+}
+.prose p { margin: 14px 0; }
+.prose h2 { font-size: 26px; margin: 28px 0 10px; line-height: 1.25; }
+.prose h3 { font-size: 22px; margin: 22px 0 8px; }
+.prose ul, .prose ol { margin: 12px 0 16px 22px; }
+.prose li { margin: 6px 0; }
+.prose blockquote {
+  margin: 18px 0;
+  padding: 10px 14px;
+  border-left: 3px solid #e2dfd8;
+  color: #444;
+  background: #faf9f7;
+}
+.prose code, .prose pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.95em;
+}
+.prose pre {
+  overflow: auto;
+  padding: 10px 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+/* рамка для изображения-героя */
+.prose figure.article-hero {
+  margin: 18px 0 22px;
+  padding: 10px;
+  border: 1px solid #e7e4dc;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 0 rgba(0,0,0,.02);
+}
+.prose figure.article-hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.prose figure.article-hero figcaption {
+  margin-top: 8px;
+  color: #6a6a6a;
+  font-size: 13px;
+}
+
+/* футер */
+.page-foot {
+  margin-top: 26px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+a.link-reset { color: inherit; text-decoration: none; }
+a.link-reset:hover { text-decoration: underline; }
+.back { color:#444; }
