@@ -18,7 +18,12 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
-
+    try:
+        from .main import main_bp
+        app.register_blueprint(main_bp)
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        print("[error] cannot register main_bp:", e)
     # Migrate — опционально, но не гасим все ошибки без логов
     try:
         from flask_migrate import Migrate
@@ -40,5 +45,5 @@ def create_app():
     @app.get("/healthz")
     def healthz():
         return {"ok": True}
-
+    
     return app

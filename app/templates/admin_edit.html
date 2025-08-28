@@ -18,7 +18,7 @@
   <p><label>Text / HTML<br><textarea name="text" rows="18" style="width: 100%">{{ article.text if article else '' }}</textarea></label></p>
   <p>
     <button type="submit">Сохранить</button>
-    <a href="{{ url_for('admin') }}">Отмена</a>
+    <a href="{{ url_for('main.admin') }}">Отмена</a>
   </p>
 </form>
 {% endblock %}

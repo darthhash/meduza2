@@ -1,10 +1,11 @@
-# scripts/check_articles.py
 import os, sys
 sys.path.insert(0, os.path.abspath("."))
 
-from app import app, db, Article
+from app import create_app, db
+from app.models import Article
 
 def main():
+    app = create_app()
     with app.app_context():
         total = db.session.query(Article).count()
         empty = db.session.query(Article)\
