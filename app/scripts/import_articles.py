@@ -1,99 +1,66 @@
+# app/scripts/import_articles.py (добавь/обнови)
 import os, sys, json
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
-from typing import List, Dict, Any
 from datetime import datetime
+from typing import List, Dict, Any
 from sqlalchemy import text as sql_text
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 from app import create_app, db
 from app.models import Article
+from slugify import slugify as _slugify
 
 _flask_app = create_app()
-_db = db
 
-def _s(x) -> str:
-    if x is None:
-        return ""
-    return x if isinstance(x, str) else str(x)
-
-import re
-
-def make_slug(title, text, section, idx):
-    # Use title if available, else text, else section+idx
-    base = title or text or f"{section}-{idx}"
-    s = base.lower()
-    s = re.sub(r"[^a-z0-9а-яё]+", "-", s)
-    s = re.sub(r"-{2,}", "-", s).strip("-")
-    return s or f"article-{section}-{idx}"
-
-def import_articles(articles: List[Dict[str, Any]]) -> int:
-    total = 0
+def _slugify_unique(base: str) -> str:
+    slug = _slugify(base or "", lowercase=True, max_length=140)
+    if not slug:
+        slug = f"art-{int(datetime.utcnow().timestamp())}"
+    orig = slug
+    i = 2
     with _flask_app.app_context():
-        try:
-            _db.session.execute(sql_text("SET client_encoding TO 'UTF8'"))
-        except Exception:
-            pass
+        while Article.query.filter_by(slug=slug).first():
+            slug = f"{orig}-{i}"
+            i += 1
+    return slug
 
-        for idx, a in enumerate(articles):
-            if not isinstance(a, dict):
-                print(f"[warn] skipping non-dict item: {a!r}")
+def import_articles_from_list(items: List[Dict[str, Any]]) -> List[int]:
+    """Принимает список {"title","text","section","slug","tags","created_at"}"""
+    ids = []
+    with _flask_app.app_context():
+        for a in items:
+            title   = (a.get("title") or "").strip()
+            text    = (a.get("text") or "").strip()
+            section = (a.get("section") or "list").strip()
+            slug    = (a.get("slug") or "").strip()
+            tags    = a.get("tags") or ""
+            created = a.get("created_at")
+
+            if not title or not text:
                 continue
-            title = _s(a.get("title"))
-            text = _s(a.get("text"))
-            slug = _s(a.get("slug"))
-            section = _s(a.get("section") or "list")
-            created_at = a.get("created_at") or datetime.utcnow()
 
-            # If slug is missing or empty, generate one
             if not slug:
-                slug = make_slug(title, text, section, idx)
+                slug = _slugify_unique(title)
+            else:
+                slug = _slugify_unique(slug)  # и так обеспечим уникальность
 
-            # Ensure slug is unique in DB
-            exists = Article.query.filter_by(slug=slug).first()
-            if exists:
-                slug = f"{slug}-{int(datetime.utcnow().timestamp())}"
+            if created:
+                try:
+                    # Принимаем ISO/строку секунд — приводим к datetime
+                    if isinstance(created, (int, float)):
+                        created = datetime.utcfromtimestamp(int(created))
+                    elif isinstance(created, str):
+                        created = datetime.fromisoformat(created.replace("Z","").strip())
+                except Exception:
+                    created = None
 
-            known = {"title", "text", "slug", "section", "tags", "created_at"}
-            extra = {k: v for k, v in a.items() if k not in known}
-            tags = _s(a.get("tags"))
-            if extra:
-                tags = (tags + "\n" if tags else "") + json.dumps(extra, ensure_ascii=False)
-
-            rec = Article(
-                title=title,
-                text=text,
-                tags=tags,
-                slug=slug,
-                section=section,
-                created_at=created_at,
+            art = Article(
+                title=title, text=text, section=section, slug=slug,
+                tags=(tags if isinstance(tags, str) else json.dumps(tags, ensure_ascii=False)),
+                created_at=created or datetime.utcnow()
             )
-            _db.session.add(rec)
-            total += 1
-        _db.session.commit()
-        return total
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python import_articles.py <path_to_json>")
-        sys.exit(1)
-    path = sys.argv[1]
-    if not os.path.exists(path):
-        print(f"File not found: {path}")
-        sys.exit(1)
-    with open(path, "r", encoding="utf-8") as f:
-        raw = json.load(f)
-    # Flatten the structure
-    articles = []
-    if isinstance(raw, dict):
-        for section, value in raw.items():
-            if isinstance(value, dict):
-                item = dict(value)
-                item["section"] = section
-                articles.append(item)
-            elif isinstance(value, list):
-                for entry in value:
-                    if isinstance(entry, dict):
-                        entry = dict(entry)
-                        entry["section"] = section
-                        articles.append(entry)
-    else:
-        articles = raw
-    count = import_articles(articles)
-    print(f"Imported {count} articles.")
+            db.session.add(art)
+            db.session.flush()
+            ids.append(art.id)
+
+        db.session.commit()
+    return ids

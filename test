@@ -15,7 +15,9 @@ curl -X POST "https://meduza-production-9648.up.railway.app/newsgen/run" \
   -H "X-Token: <NEWSGEN_TOKEN>" \
   -d '{"topic":"Москва — финтех — экспериментальный режим — вымышленный предприниматель","n":1,"import":true}'
 
-  curl -X POST " http://0.0.0.0:8081/newsgen/run" \
+  curl -X POST "http://127.0.0.1:5000/newsgen/run" \
   -H "Content-Type: application/json" \
-  -H "X-Token: <NEWSGEN_TOKEN>" \
+  -H "X-Token: dfswfd32r329dewqf00wefwfedwwcs" \
   -d '{"topic":"Москва — финтех — экспериментальный режим — вымышленный предприниматель","n":1,"import":true}'
+
+  curl -s -X POST localhost:8000/newsgen/run \ -H "Content-Type: application/json" -H "X-Token: dfswfd32r329dewqf00wefwfedwwcs" \ -d '{"n":5,"import":true,"lambda":0.08,"context_items":80}' | jq
